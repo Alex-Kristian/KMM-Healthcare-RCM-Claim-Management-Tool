@@ -8,6 +8,11 @@ class Settings(BaseSettings):
     COGNITO_USER_POOL_ID: str
     COGNITO_CLIENT_ID: str
 
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+    DATABASE_URL: str
+
     class Config:
         env_file = ".env"
 
