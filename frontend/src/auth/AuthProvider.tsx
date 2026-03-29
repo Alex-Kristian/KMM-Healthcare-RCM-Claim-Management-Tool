@@ -7,7 +7,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   return (
-    <Authenticator>
+    <Authenticator hideSignUp={true} initialState='signIn'>
       {() => <>{children}</>}
     </Authenticator>
   );
