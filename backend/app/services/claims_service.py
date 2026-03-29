@@ -41,9 +41,12 @@ class ClaimsService:
             "claim_number": claim.patient_control_number,
             "patient_name": f"{claim.patient_first_name or ''} {claim.patient_last_name or ''}".strip(),
             "payer": claim.era_file.payer_name if claim.era_file else None,
+            "patient_responsibility": claim.patient_responsibility,
             "status": claim.claim_status_code,
             "total_charge": claim.total_charge_amount,
-            "payment_amount": claim.paid_amount,
+            "paid_amount": claim.paid_amount,
+            "statement_from_date": claim.statement_from_date,
+            "statement_to_date": claim.statement_to_date,
             "days_in_ar": calc_days_in_ar(
                     claim.statement_from_date, 
                     claim.era_file.payment_date if claim.era_file else None
@@ -54,6 +57,7 @@ class ClaimsService:
                     "procedure_code": s.procedure_code,
                     "charge": s.charge_amount,
                     "paid": s.paid_amount,
+                    "service_date": s.service_date,
                     "adjustments": [
                         {
                             "group": a.group_code,
@@ -72,4 +76,5 @@ class ClaimsService:
 def calc_days_in_ar(service_date, payment_date):
     if not service_date or not payment_date:
         return None
-    return (payment_date - service_date).days
+    end_date = payment_date if payment_date else date.today()
+    return (end_date - service_date).days
