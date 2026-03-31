@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:20 AS build
 
 WORKDIR /app
 
@@ -6,10 +6,19 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
-
 RUN npm run build
 
-ENV PORT=5173
-EXPOSE $PORT
 
-CMD sh -c "npm run preview -- --host 0.0.0.0 --port $PORT"
+FROM node:20
+
+WORKDIR /app
+
+
+RUN npm install -g serve
+
+
+COPY --from=build /app/dist ./dist
+
+EXPOSE 3000
+
+CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000}"]
