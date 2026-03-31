@@ -9,7 +9,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 Amplify.configure(CognitoConfig);
 
-console.log('API URL:', import.meta.env.VITE_API_URL)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

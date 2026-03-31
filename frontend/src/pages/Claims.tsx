@@ -53,7 +53,7 @@ export default function Claims() {
  
   useEffect(() => {
     setLoading(true);
-    api.get("/claims")
+    api.get("/claims/")
       .then((res) => setClaims(res.data))
       .catch((err) => { console.error(err); setError("Failed to load claims."); })
       .finally(() => setLoading(false));
