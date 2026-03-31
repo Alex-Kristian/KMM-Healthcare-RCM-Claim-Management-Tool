@@ -10,7 +10,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("")
 async def get_claims(db=Depends(get_db)):
     service = ClaimsService(db)
     return await service.list_claims()

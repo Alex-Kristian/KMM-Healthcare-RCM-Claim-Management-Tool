@@ -19,7 +19,7 @@ export default function PayerAnalytics() {
  
   useEffect(() => {
     setLoading(true);
-    api.get("/claims/").then((res) => {
+    api.get("/claims").then((res) => {
       setClaims(res.data);
       setLoading(false);
     });

@@ -33,7 +33,7 @@ export default function UploadModal({ show, onClose, onSuccess }: UploadModalPro
 
     try {
       setStatus("uploading");
-      const response = await api.post("/era/upload/", formData);
+      const response = await api.post("/era/upload", formData);
       console.log("Upload result:", response.data);
       setStatus("success");
       onSuccess?.();
