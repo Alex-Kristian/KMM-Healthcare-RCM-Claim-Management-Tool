@@ -9,7 +9,7 @@ def handle_bpr(elements, era):
 
 def handle_trn(elements, era):
     era['trace_number'] = safe_get(elements, 2)
-    era['payer_id'] = safe_get(elements, 3)
+    era['originating_company_id'] = safe_get(elements, 3)
 
 
 def handle_n1(elements, era):
