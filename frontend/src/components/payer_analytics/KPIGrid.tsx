@@ -10,7 +10,7 @@ export default function KPIGrid({ kpis }: Props) {
   return (
     <div className="row g-3 mb-4">
     {[
-        { label: "Total Collections", value: fmt$(kpis.totalRevenue), sub: "Paid Claims Revenue", icon: "bi-currency-dollar", colorClass: "text-primary", indicatorColor: "#0d6efd" },
+        { label: "Total Collections", value: fmt$(kpis.totalRevenue), sub: "Paid Claims Revenue", icon: "bi-currency-dollar", colorClass: "text-light-blue", indicatorColor: "#0d6efd" },
         { label: "Claim Volume", value: kpis.totalClaims.toLocaleString(), sub: `${kpis.totalPending} Pending`, icon: "bi-file-medical", colorClass: "text-secondary", indicatorColor: "#6c757d" },
         { label: "Overall Denial Rate", value: fmtPct(kpis.avgDenial), sub: `Benchmark: ${DENIAL_BENCHMARK}%`, icon: "bi-x-circle-fill", colorClass: kpis.avgDenial > DENIAL_BENCHMARK ? "text-danger" : "text-success", indicatorColor: kpis.avgDenial > DENIAL_BENCHMARK ? "#dc3545" : "#198754" },
         { label: "Avg Days in A/R", value: kpis.avgAR.toFixed(1), sub: `Benchmark: ${AR_BENCHMARK} Days`, icon: "bi-calendar-range", colorClass: kpis.avgAR > AR_BENCHMARK ? "text-warning" : "text-success", indicatorColor: kpis.avgAR > AR_BENCHMARK ? "#fd7e14" : "#198754" },

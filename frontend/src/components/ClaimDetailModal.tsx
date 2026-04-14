@@ -63,14 +63,14 @@ export default function ClaimDetailModal({ claim, loading, onClose }: Props) {
                 {/* KPI Cards */}
                 <div className="row g-3 mb-4">
                   {[
-                    { label: "Total Billed",  value: fmtFull(claim.total_charge),          icon: "bi-currency-dollar", color: "primary"                           },
-                    { label: "Paid",          value: fmtFull(claim.paid_amount),            icon: "bi-graph-up-arrow",  color: "success"                           },
-                    { label: "Patient Resp.", value: fmtFull(claim.patient_responsibility), icon: "bi-person-fill",     color: "secondary"                         },
-                    { label: "Balance",       value: fmtFull(balance),                      icon: "bi-clock-fill",      color: balance > 0 ? "warning" : "success" },
+                    { label: "Total Billed",  value: fmtFull(claim.total_charge),          icon: "bi-currency-dollar", color: "text-light-blue"                           },
+                    { label: "Paid",          value: fmtFull(claim.paid_amount),            icon: "bi-graph-up-arrow",  color: "text-success"                           },
+                    { label: "Patient Resp.", value: fmtFull(claim.patient_responsibility), icon: "bi-person-fill",     color: "text-secondary"                         },
+                    { label: "Balance",       value: fmtFull(balance),                      icon: "bi-clock-fill",      color: balance > 0 ? "text-warning" : "text-success" },
                   ].map((kpi) => (
                     <div key={kpi.label} className="col-6 col-md-3">
                       <div className="card border-0 shadow-sm text-center py-3 bg-white" style={{ borderRadius: 10 }}>
-                        <i className={`bi ${kpi.icon} text-${kpi.color}`} style={{ fontSize: 22 }} />
+                        <i className={`bi ${kpi.icon} ${kpi.color}`} style={{ fontSize: 22 }} />
                         <div className="text-muted mt-1" style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.07em", fontWeight: 600 }}>{kpi.label}</div>
                         <div className={`fw-bold text-${kpi.color}`} style={{ fontSize: 20 }}>{kpi.value}</div>
                       </div>
