@@ -11,8 +11,9 @@ class ClaimsRepository:
     async def get_all_claims(self):
         result = await self.db.execute(
             select(Claim)
-            .options(selectinload(Claim.era_file))
-            )
+            .where(Claim.is_current == True)
+            .options(
+                selectinload(Claim.payer)))
         return result.scalars().all()
 
 
@@ -21,7 +22,7 @@ class ClaimsRepository:
             select(Claim)
             .where(Claim.id == claim_id)
             .options(
-                selectinload(Claim.era_file),
+                selectinload(Claim.payer),
                 selectinload(Claim.service_lines)
                 .selectinload(ServiceLine.adjustments)
             )

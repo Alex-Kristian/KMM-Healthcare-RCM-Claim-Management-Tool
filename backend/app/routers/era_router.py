@@ -20,14 +20,11 @@ async def upload_era(
 
         service = EraService(db)
 
-        result = await service.process_era(
-            raw_text=raw_text,
-            filename=file.filename
-        )
+        result = await service.process_era(raw_text=raw_text)
 
         return {
             "message": "ERA processed successfully",
-            "era_id": result.id
+            "Claims Processed": len(result)
         }
 
     except UnicodeDecodeError:
