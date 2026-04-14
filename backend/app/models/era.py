@@ -1,21 +1,16 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, Date, DateTime, Boolean
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
+from sqlalchemy import func
 
 class Base(DeclarativeBase):
     pass
-
 
 class EraFile(Base):
     __tablename__ = "era_files"
 
     id = Column(Integer, primary_key=True)
 
-    filename = Column(String(255))
-
-    payer_name = Column(String(255))
-    payer_id = Column(String(80))
     payee_name = Column(String(255))
     payee_npi = Column(String(20))
 
@@ -33,17 +28,32 @@ class EraFile(Base):
         cascade="all, delete-orphan"
     )
 
+class Payer(Base):
+    __tablename__ = "payers"
+    id = Column(Integer, primary_key=True)
+    payer_identifier = Column(String(80), unique=True, nullable=False)
+    payer_name = Column(String(255), nullable=False)
+
+    claims = relationship("Claim", back_populates="payer")
 
 class Claim(Base):
     __tablename__ = "claims"
 
     id = Column(Integer, primary_key=True)
+    previous_claim_id = Column(Integer)
+
+    #Payer/Payee Information
+    payer_id = Column(Integer, ForeignKey("payers.id"))
+    patient_control_number = Column(String(50), nullable=False)
+    payer = relationship("Payer", back_populates="claims")
+
+    #ERA 
     era_file_id = Column(Integer, ForeignKey("era_files.id"))
+    era_file = relationship("EraFile", back_populates="claims")
 
-    patient_control_number = Column(String(50))
     claim_status_code = Column(String(2))
-    is_denied = Column(Boolean)
-
+    is_denied = Column(Boolean, default=False)
+    is_current = Column(Boolean, default=True, nullable=False)
     total_charge_amount = Column(Numeric(12, 2))
     paid_amount = Column(Numeric(12, 2))
     patient_responsibility = Column(Numeric(12, 2))
@@ -56,8 +66,7 @@ class Claim(Base):
 
     statement_from_date = Column(Date)
     statement_to_date = Column(Date)
-
-    era_file = relationship("EraFile", back_populates="claims")
+    final_payment_date = Column(Date)
 
     service_lines = relationship(
         "ServiceLine",
