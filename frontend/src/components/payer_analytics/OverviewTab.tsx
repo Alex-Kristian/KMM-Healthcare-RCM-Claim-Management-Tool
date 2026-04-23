@@ -1,8 +1,6 @@
 import type { PayerStat } from "../../types/PayerStat";
 import AvgARChart from "./charts/AvgARChart";
-import DenialChart from "./charts/DenialChart";
 import ReimbursementChart from "./charts/ReimbursementChart";
-import RevenueChart from "./charts/RevenueChart";
 import { fmt$, fmtPct } from "../../utils/formatters";
 import { riskLabel } from "../../utils/payerAnalytics";
 import RevenueTreemap from "./charts/RevenueTreeMap";
