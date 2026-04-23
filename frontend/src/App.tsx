@@ -3,6 +3,7 @@ import { AuthProvider } from './auth';
 import Layout from './components/Layout';
 import Claims from './pages/Claims';
 import Analytics from './pages/Analytics';
+import DenialSummary from './pages/DenialSummary'
 
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
             <Route path="/" element={<Navigate to="/claims" replace />} />
             <Route path="/claims" element={<Claims />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/denial_summary" element={<DenialSummary />} />
             <Route path="/*" element={<Navigate to="/claims" replace />} />
           </Routes>
         </Layout>
