@@ -78,18 +78,3 @@ class EraService:
             
         return new_claims
     
-
-   # async def _create_updated_claim(self, previous_claim: Claim, claim_data: dict, payment_date_string: str):
-        
-    #    new_claim = await self.repo.create_updated_claim(claim_data=claim_data, existing_claim=previous_claim, payment_date_string=payment_date_string)
-    #    paid_service_lines = await self.repo.get_claim_paid_service_lines(previous_claim.id)
-    #    for service_line in paid_service_lines:
-    #        #Service line had been paid (accepted) if paid amount > $0
-    #        if service_line.paid_amount > 0:
-    #3            await self.repo.create_service_line_copy(service_line=service_line, new_claim_id=new_claim.id)
-
-#                await self.repo.get_adjustments_by_service_line_id(service_line_id=service_line.id)
- #               for adjustment in service_line.adjustments:
-  #                  await self.repo.create_adjustment_copy(adjustment=adjustment, service_line_id=service_line.id)
-
-   #     return new_claim
