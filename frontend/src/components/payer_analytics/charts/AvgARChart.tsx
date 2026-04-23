@@ -22,7 +22,7 @@ export default function AvgARChart({ payerStats }: {payerStats: PayerStat[]}) {
         <XAxis dataKey="payer" tick={{ fill: "#6c757d", fontSize: 8 }} angle={-30} textAnchor="end" />
         <YAxis tick={{ fill: "#6c757d", fontSize: 11 }} />
         <Tooltip/>
-        <ReferenceLine y={AR_BENCHMARK} stroke="#fd7e14" strokeDasharray="5 5" label={{ value: "Target", fill: "#fd7e14", fontSize: 11 }} />
+        <ReferenceLine y={AR_BENCHMARK} stroke="#fd7e14" strokeDasharray="5 5" label={{ fill: "#fd7e14", fontSize: 11 }} />
         <Bar dataKey="avgAR" name="Avg AR Days" radius={[4, 4, 0, 0]}>
             {payerStats.map((p, i) => <Cell key={i} fill={p.avgAR > AR_BENCHMARK ? "#fd7e14" : "#0d6efd"} />)}
         </Bar>

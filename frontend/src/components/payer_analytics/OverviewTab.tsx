@@ -5,6 +5,7 @@ import ReimbursementChart from "./charts/ReimbursementChart";
 import RevenueChart from "./charts/RevenueChart";
 import { fmt$, fmtPct } from "../../utils/formatters";
 import { riskLabel } from "../../utils/payerAnalytics";
+import RevenueTreemap from "./charts/RevenueTreeMap";
 
 const DENIAL_BENCHMARK = 10;
 const AR_BENCHMARK = 40;
@@ -21,27 +22,14 @@ export default function OverviewTab({ payerStats, selectedPayer, setSelectedPaye
   return (
           <div className="row g-3 mb-4">
             {/* Revenue by Payer */}
-            <div className="col-12 col-xl-6">
+            <div className="col-12">
               <div className="card border-0 shadow-sm h-100 bg-white" style={{ borderRadius: 10 }}>
                 <div className="card-body">
                   <h6 className="fw-bold text-dark mb-0">
                     <i className="text-primary" />Revenue by Payer
                   </h6>
                   <p className="text-muted mb-3" style={{ fontSize: 12 }}>Collected Payments Per Payer</p>
-                    <RevenueChart payerStats={payerStats}></RevenueChart>
-                </div>
-              </div>
-            </div>
- 
-            {/* Denial Rate */}
-            <div className="col-12 col-xl-6">
-              <div className="card border-0 shadow-sm h-100 bg-white" style={{ borderRadius: 10 }}>
-                <div className="card-body">
-                  <h6 className="fw-bold text-dark mb-0">
-                    <i className="text-primary"/>Denial Rate
-                  </h6>
-                  <p className="text-muted mb-3" style={{ fontSize: 12 }}>Industry Benchmark: {DENIAL_BENCHMARK}%</p>
-                    <DenialChart payerStats={payerStats}></DenialChart>
+                    <RevenueTreemap payerStats={payerStats}></RevenueTreemap>
                 </div>
               </div>
             </div>

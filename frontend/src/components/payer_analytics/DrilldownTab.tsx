@@ -30,7 +30,7 @@ function radarData(
         { metric: "Revenue Share", value: Math.min(100, (selected.revenue / (totalRevenue || 1)) * 100 * payerCount) },
         { metric: "1st Pass Rate", value: selected.firstPassRate },
         { metric: "Reimbursement", value: selected.reimbursement },
-        { metric: "Clean Claims", value: 100 - selected.denialRate },
+        { metric: "Denial Rate", value: 100 - selected.denialRate },
         { metric: "AR Speed", value: Math.max(0, 100 - selected.avgAR) },
     ]
 
