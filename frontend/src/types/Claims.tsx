@@ -27,7 +27,7 @@ export interface Claim {
   provider: string;
   days_in_ar: number;
   was_resubmitted: boolean;
-
+  payment_date: string;
 }
 
 export interface ClaimDetail extends Claim {

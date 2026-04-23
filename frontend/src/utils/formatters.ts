@@ -14,5 +14,5 @@ export const fmtFull = (n?: number) =>
 export const fmtDate = (d?: string) => {
   if (!d) return "—";
   const [y, m, dd] = d.split("-");
-  return `${m}/${dd}/${y.slice(2)}`;
+  return `${m}/${dd}/${y}`;
 };
