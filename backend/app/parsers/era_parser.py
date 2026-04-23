@@ -32,8 +32,9 @@ def parse_era(content: str):
             handle_nm1(elements, current_claim)
 
         elif seg_id == 'SVC':
-            current_service_line = handle_svc(elements, current_claim, current_service_line)
-
+            new_line = handle_svc(elements, current_claim, current_service_line)
+            if new_line: 
+                current_service_line = new_line
         elif seg_id == 'DTM':
             handle_dtm(elements, current_claim, current_service_line)
 

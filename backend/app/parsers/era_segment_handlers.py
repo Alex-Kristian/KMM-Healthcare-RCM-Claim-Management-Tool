@@ -78,6 +78,9 @@ def handle_nm1(elements, claim):
 
 
 def handle_svc(elements, claim, current_service_line):
+    if not claim:
+        return None
+    
     if current_service_line:
         claim.setdefault('service_lines', []).append(current_service_line.copy())
 

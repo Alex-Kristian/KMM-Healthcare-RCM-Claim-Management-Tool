@@ -25,6 +25,8 @@ def safe_float(elements, idx):
 
 
 def finalize_claim(era, claim, service_line):
+    if not claim:
+        return
     if service_line:
         claim.setdefault('service_lines', []).append(service_line.copy())
         service_line.clear()
