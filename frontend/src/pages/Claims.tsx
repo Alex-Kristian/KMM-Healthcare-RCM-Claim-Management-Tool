@@ -3,9 +3,9 @@ import api from "../api/apiClient";
 import ClaimDetailModal from "../components/ClaimDetailModal";
 import type { Claim, ClaimDetail } from "../types/Claims";
 import { fmtFull, fmtDate } from "../utils/formatters";
-import { getBalance, StatusBadge } from "../utils/claims";
+import { StatusBadge } from "../utils/claims";
  
-type SortKey = keyof Claim | "balance";
+type SortKey = keyof Claim;
 type SortDir = 1 | -1;
 
  
@@ -15,14 +15,14 @@ function SortIcon({ col, sortKey, sortDir }: { col: string; sortKey: SortKey; so
 }
  
 const COLS: { key: SortKey; label: string; align?: string }[] = [
-  { key: "claim_number",        label: "Claim #"            },
-  { key: "patient_name",        label: "Patient"            },
-  { key: "payer",               label: "Payer"              },
-  { key: "statement_from_date", label: "Service Start Date" },
+  { key: "claim_number",        label: "Claim #"                    },
+  { key: "patient_name",        label: "Patient"                    },
+  { key: "payer",               label: "Payer"                      },
+  { key: "statement_from_date", label: "Service Date"               },
+  { key: "payment_date",        label: "Payment Date"               },
   { key: "total_charge",        label: "Billed",  align: "text-end" },
   { key: "paid_amount",         label: "Paid",    align: "text-end" },
-  { key: "balance",             label: "Balance", align: "text-end" },
-  { key: "status",              label: "Status"             },
+  { key: "status",              label: "Status"                     },
 ];
  
 
@@ -77,9 +77,8 @@ export default function Claims() {
  
   const sortedClaims = useMemo(() => {
     return [...filteredClaims].sort((a, b) => {
-      // Calculate balances if sort by balance
-      const aValue: any = sortKey === "balance" ? getBalance(a) : a[sortKey as keyof Claim];
-      const bValue: any = sortKey === "balance" ? getBalance(b) : b[sortKey as keyof Claim];
+      const aValue: any = a[sortKey as keyof Claim];
+      const bValue: any = b[sortKey as keyof Claim];
  
       // Sort numeric columns
       if (typeof aValue === "number" || typeof bValue === "number") {
@@ -192,7 +191,7 @@ export default function Claims() {
               <select className="form-select form-select-sm" value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }}>
                 <option value="">All statuses</option>
                 <option value="1">Paid</option>
-                <option value="2">Pending</option>
+                <option value="2">Partially Paid</option>
                 <option value="4">Denied</option>
               </select>
             </div>
@@ -237,16 +236,15 @@ export default function Claims() {
                   </thead>
                   <tbody>
                     {paginatedClaims.map((c) => {
-                      const balance = getBalance(c);
                       return (
                         <tr key={c.id} style={{ cursor: "pointer" }} onClick={() => handleRowClick(c)}>
                           <td className="fw-semibold font-monospace" style={{ fontSize: 13 }}>{c.claim_number}</td>
                           <td className="fw-semibold text-dark" style={{ fontSize: 13 }}>{c.patient_name || "—"}</td>
                           <td className="text-muted" style={{ fontSize: 13 }}>{c.payer || "—"}</td>
                           <td className="text-muted" style={{ fontSize: 13 }}>{fmtDate(c.statement_from_date)}</td>
+                          <td className="text-muted" style={{ fontSize: 13 }}>{fmtDate(c.payment_date) || "—"}</td>
                           <td className="text-end" style={{ fontSize: 13 }}>{fmtFull(c.total_charge)}</td>
                           <td className="text-end fw-semibold text-success" style={{ fontSize: 13 }}>{fmtFull(c.paid_amount)}</td>
-                          <td className="text-end fw-semibold" style={{ fontSize: 13, color: balance > 0 ? "#fd7e14" : "#198754" }}>{fmtFull(balance)}</td>
                           <td><StatusBadge status={c.status} /></td>
                         </tr>
                       );

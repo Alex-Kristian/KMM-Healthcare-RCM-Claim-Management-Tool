@@ -32,11 +32,12 @@ export default function ClaimDetailModal({ claim, loading, onClose }: Props) {
           <div className="modal-header border-0 px-4 pt-4 pb-3">
             <div>
               <p className="text-primary fw-semibold mb-1" style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                Claim Details
+                Claim Details 
               </p>
               <h5 className="fw-bold text-dark mb-0" style={{ fontSize: 20, letterSpacing: "-0.01em" }}>
                 <i className="text-primary" />
-                {loading ? "Loading…" : `Claim #${claim?.claim_number}`}
+                {loading ? "Loading…" : `Claim #${claim?.claim_number} `}
+                {!loading && <StatusBadge status={claim?.status} />}
               </h5>
             </div>
             <button
@@ -72,7 +73,7 @@ export default function ClaimDetailModal({ claim, loading, onClose }: Props) {
                       <div className="card border-0 shadow-sm text-center py-3 bg-white" style={{ borderRadius: 10 }}>
                         <i className={`bi ${kpi.icon} ${kpi.color}`} style={{ fontSize: 22 }} />
                         <div className="text-muted mt-1" style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.07em", fontWeight: 600 }}>{kpi.label}</div>
-                        <div className={`fw-bold text-${kpi.color}`} style={{ fontSize: 20 }}>{kpi.value}</div>
+                        <div className={`fw-bold ${kpi.color}`} style={{ fontSize: 20 }}>{kpi.value}</div>
                       </div>
                     </div>
                   ))}
@@ -94,16 +95,12 @@ export default function ClaimDetailModal({ claim, loading, onClose }: Props) {
                         <p className="fw-semibold text-dark mb-0" style={{ fontSize: 14 }}>{claim.payer || "—"}</p>
                       </div>
                       <div className="col-6 col-md-3">
-                        <p className="text-muted mb-1" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>Start Service Date</p>
+                        <p className="text-muted mb-1" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>Service Date</p>
                         <p className="fw-semibold text-dark mb-0" style={{ fontSize: 14 }}>{fmtDate(claim.statement_from_date) || "—"}</p>
                       </div>
                       <div className="col-6 col-md-3">
-                        <p className="text-muted mb-1" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>End Service Date</p>
-                        <p className="fw-semibold text-dark mb-0" style={{ fontSize: 14 }}>{fmtDate(claim.statement_to_date) || "—"}</p>
-                      </div>
-                      <div className="col-6 col-md-3">
-                        <p className="text-muted mb-1" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>Status</p>
-                        <StatusBadge status={claim.status} />
+                        <p className="text-muted mb-1" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>Payment Date</p>
+                        <p className="fw-semibold text-dark mb-0" style={{ fontSize: 14 }}>{fmtDate(claim.payment_date) || "—"}</p>
                       </div>
                     </div>
                   </div>
