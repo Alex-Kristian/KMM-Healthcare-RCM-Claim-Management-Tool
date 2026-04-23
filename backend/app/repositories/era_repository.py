@@ -85,6 +85,9 @@ class EraRepository:
         if new_claim.claim_status_code == "1":
             new_claim.final_payment_date = parse_date(payment_date_string)
 
+        elif new_claim.claim_status_code == "2" or new_claim.claim_status_code == "4":
+            new_claim.is_denied = True
+    
         self.db.add(new_claim)
         await self.db.flush()
 
@@ -143,6 +146,9 @@ class EraRepository:
         if new_claim.claim_status_code == "1":
             new_claim.final_payment_date = parse_date(payment_date_string)
 
+        elif new_claim.claim_status_code == "2" or new_claim.claim_status_code == "4":
+            new_claim.is_denied = True
+    
         self.db.add(new_claim)
         await self.db.flush()
 
