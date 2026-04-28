@@ -54,6 +54,7 @@ class Claim(Base):
     claim_status_code = Column(String(2))
     is_denied = Column(Boolean, default=False)
     is_current = Column(Boolean, default=True, nullable=False)
+    is_first_pass = Column(Boolean, default=False)
     total_charge_amount = Column(Numeric(12, 2))
     paid_amount = Column(Numeric(12, 2))
     patient_responsibility = Column(Numeric(12, 2))

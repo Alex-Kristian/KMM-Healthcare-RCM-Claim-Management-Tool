@@ -26,7 +26,7 @@ export interface Claim {
   statement_to_date: string;
   provider: string;
   days_in_ar: number;
-  was_resubmitted: boolean;
+  is_first_pass: boolean;
   payment_date: string;
 }
 

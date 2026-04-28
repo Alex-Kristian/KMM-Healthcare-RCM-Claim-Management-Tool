@@ -1,6 +1,7 @@
 from app.parsers.era_parser import parse_era
 from app.repositories.era_repository import EraRepository
 from app.models.era import Claim
+from app.utils.claims_utils import assign_missing_claim_total_values
 
 class EraService:
     def __init__(self, db):
@@ -68,12 +69,20 @@ class EraService:
                     payment_date_string=payment_date
                     )
 
+            service_line_list = []
+            adjustment_list = []
+
             for service_line_data in claim_data.get("service_lines", []):
                 service_line = await self.repo.create_service_line(service_line_data=service_line_data, claim_id=claim.id)
-
+                service_line_list.append(service_line)
                 for adjustment_data in service_line_data.get("adjustments", []):
-                    await self.repo.create_adjustment(adjustment_data=adjustment_data, service_line_id=service_line.id)
-                
+                    adjustment = await self.repo.create_adjustment(adjustment_data=adjustment_data, service_line_id=service_line.id)
+                    adjustment_list.append(adjustment)
+            
+            #Calculate claim totals if missing
+            assign_missing_claim_total_values(claim=claim, service_lines=service_line_list, adjustments=adjustment_list)
+            
+
             new_claims.append(claim)
             
         return new_claims

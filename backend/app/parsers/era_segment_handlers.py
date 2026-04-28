@@ -30,7 +30,6 @@ def handle_clp(elements, era, current_claim, current_service_line):
     return {
         'patient_control_number': safe_get(elements, 1),
         'status_code': safe_get(elements, 2),
-        'is_denied': safe_get(elements, 2) == '4',
         'charged_amount': safe_float(elements, 3),
         'paid_amount': safe_float(elements, 4),
         'patient_responsibility': safe_float(elements, 5),

@@ -84,9 +84,13 @@ class EraRepository:
         )
         if new_claim.claim_status_code == "1":
             new_claim.final_payment_date = parse_date(payment_date_string)
+            new_claim.is_first_pass = True
 
-        elif new_claim.claim_status_code == "2" or new_claim.claim_status_code == "4":
+        #If the claim was not paid, it was denied
+        else: 
             new_claim.is_denied = True
+            new_claim.is_first_pass = False
+
     
         self.db.add(new_claim)
         await self.db.flush()
@@ -141,14 +145,17 @@ class EraRepository:
             statement_from_date=parse_date(claim_data.get("service_date_start")),
             statement_to_date=parse_date(claim_data.get("service_date_end")),
             #Set as current state of claim
-            is_current=True
+            is_current=True,
+            #Updated claim will always have the same first pass flag
+            is_first_pass=existing_claim.is_first_pass
         )
         if new_claim.claim_status_code == "1":
             new_claim.final_payment_date = parse_date(payment_date_string)
 
         elif new_claim.claim_status_code == "2" or new_claim.claim_status_code == "4":
             new_claim.is_denied = True
-    
+
+
         self.db.add(new_claim)
         await self.db.flush()
 

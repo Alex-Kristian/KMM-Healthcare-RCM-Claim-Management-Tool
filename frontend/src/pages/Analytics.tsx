@@ -46,11 +46,10 @@ export default function PayerAnalytics() {
  
       if (c.status === "DENIED" || c.status === "4") map[payer].denied++;
       else if (c.status === "PENDING" || c.status === "2")  map[payer].pending++;
-      else if (c.status === "PAID" || c.status === "1"
-      ) {
-        map[payer].paidCount++;
-        if (!c.was_resubmitted) map[payer].firstPass++;
-      }
+      else if (c.status === "PAID" || c.status === "1") map[payer].paidCount++;
+      
+      if (c.is_first_pass) map[payer].firstPass++;
+      
     }
  
     return Object.values(map)
@@ -58,7 +57,7 @@ export default function PayerAnalytics() {
         const denialRate = p.total ? (p.denied / p.total) * 100 : 0;
         const avgAR = p.total ? p.arDays / p.total : 0;
         const reimbursement = p.charged ? (p.paid / p.charged) * 100 : 0;
-        const firstPassRate = p.paidCount ? (p.firstPass / p.paidCount) * 100 : 0;
+        const firstPassRate = p.total ? (p.firstPass / p.total) * 100 : 0;
         const riskScore = calculateRisk(denialRate, avgAR, reimbursement)
         return { payer: p.payer, revenue: p.paid, denialRate, reimbursement, avgAR, totalClaims: p.total, firstPassRate, deniedCount: p.denied, pendingCount: p.pending, paidCount: p.paidCount, riskScore };
       })

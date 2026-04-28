@@ -1,7 +1,7 @@
 from app.repositories.claims_repository import ClaimsRepository
 from app.schema.denial_line_schema import DenialLineSchema
 from app.constants.carc_codes import CARC_CODE_DESCRIPTIONS
-from datetime import date
+from app.utils.claims_utils import calc_days_in_ar
 
 class ClaimsService:
     def __init__(self, db):
@@ -15,12 +15,13 @@ class ClaimsService:
             {
                 "id": c.id,
                 "patient_name": f"{c.patient_first_name or ''} {c.patient_last_name or ''}".strip(),
-                "payer": c.payer.payer_name if c.payer else None,
+                "payer": c.payer.payer_name if c.payer else "Unknown",
                 "claim_number": c.patient_control_number,
                 "total_charge": c.total_charge_amount,
                 "paid_amount": c.paid_amount,
                 "patient_responsibility": c.patient_responsibility,
                 "status": c.claim_status_code,
+                "is_first_pass": c.is_first_pass,
                 "statement_from_date": c.statement_from_date,
                 "statement_to_date": c.statement_to_date,
                 "payment_date": c.era_file.payment_date if c.is_denied and c.era_file  else c.final_payment_date, 
@@ -94,11 +95,3 @@ class ClaimsService:
             )
             for row in rows
         ]
-
-
-
-def calc_days_in_ar(service_date, payment_date):
-    if not service_date:
-        return None
-    end_date = payment_date if payment_date else date.today()
-    return (end_date - service_date).days
