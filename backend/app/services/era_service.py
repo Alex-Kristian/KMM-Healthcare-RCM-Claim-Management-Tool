@@ -79,7 +79,7 @@ class EraService:
                     adjustment = await self.repo.create_adjustment(adjustment_data=adjustment_data, service_line_id=service_line.id)
                     adjustment_list.append(adjustment)
             
-            #Calculate claim totals if missing
+            #Calculate claim totals if zero/missing
             assign_missing_claim_total_values(claim=claim, service_lines=service_line_list, adjustments=adjustment_list)
             
 

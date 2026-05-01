@@ -69,7 +69,7 @@ export default function UploadModal({ show, onClose, onSuccess }: UploadModalPro
           {/* Header */}
           <div className="modal-header">
             <h5 className="modal-title">Upload ERA .835 File</h5>
-            <button className="btn-close" onClick={handleClose} />
+            <button className="btn-close me-2" onClick={handleClose} />
           </div>
 
           {/* Body */}

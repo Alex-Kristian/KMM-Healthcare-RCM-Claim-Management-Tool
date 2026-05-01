@@ -1,21 +1,34 @@
 import type { ClaimDetail } from "../types/Claims";
 import { fmtFull, fmtDate } from "../utils/formatters";
 import { StatusBadge } from "../utils/claims";
+import api from "../api/apiClient"
+
  
 interface Props {
   claim: ClaimDetail | null;
   loading: boolean;
   onClose: () => void;
+  onRefresh: () => Promise<void>;
 }
- 
-export default function ClaimDetailModal({ claim, loading, onClose }: Props) {
+
+
+export default function ClaimDetailModal({ claim, loading, onClose, onRefresh }: Props) {
   if (!claim && !loading) return null;
  
   const balance = Math.max(
     0,
     (claim?.total_charge ?? 0) - (claim?.paid_amount ?? 0) - (claim?.patient_responsibility ?? 0)
   );
- 
+
+  const handleConfirmDelete = async (claimId: number) => {  
+  try {
+    await api.delete(`/claims/${claimId}`);
+    await onRefresh();
+    onClose();
+  } catch (err) {
+    console.error(err);
+  }
+};
   return (
     <div
       className="modal fade show"
@@ -40,13 +53,7 @@ export default function ClaimDetailModal({ claim, loading, onClose }: Props) {
                 {!loading && <StatusBadge status={claim?.status} />}
               </h5>
             </div>
-            <button
-              className="btn btn-sm btn-outline-secondary ms-auto"
-              style={{ borderRadius: 20, fontSize: 12 }}
-              onClick={onClose}
-            >
-              <i className="bi bi-x-lg me-1" />Close
-            </button>
+              <button className="btn-close" onClick={onClose} />
           </div>
  
           {/* Body */}
@@ -162,6 +169,23 @@ export default function ClaimDetailModal({ claim, loading, onClose }: Props) {
                     </div>
                   </div>
                 </div>
+                  <div className="modal-footer border-0 px-0 pt-4">
+                    <button
+                      className="btn btn-danger px-2"
+                      onClick={() => {
+                        if (window.confirm("Are you sure you want to delete this claim?")) {
+                               try {
+                                handleConfirmDelete(claim.id)
+                               } catch (err) {
+                                 console.error(err);
+                               }   
+                        }
+                      }}
+                    >
+                      <i className="bi bi-trash me-1" />
+                      Delete Claim
+                    </button>
+                  </div>
               </>
             )}
           </div>
