@@ -3,11 +3,11 @@
 // Changes made: Refactoring included abstracting components, altering formatting, adding the API get request for claims, and changing claim information displayed 
 
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import api from "../api/apiClient";
 import ClaimDetailModal from "../components/ClaimDetailModal";
 import type { Claim, ClaimDetail } from "../types/Claims";
-import { fmtFull, fmtDate } from "../utils/formatters";
+import { fmtFull, fmtDate, formatDatetoString } from "../utils/formatters";
 import { StatusBadge } from "../utils/claims";
  
 type SortKey = keyof Claim;
@@ -31,6 +31,7 @@ const COLS: { key: SortKey; label: string; align?: string }[] = [
 ];
  
 
+
 export default function Claims() {
   const [claims, setClaims]   = useState<Claim[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,11 +41,19 @@ export default function Claims() {
   const [search, setSearch]             = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [filterPayer, setFilterPayer]   = useState("");
-  const [dateFrom, setDateFrom]         = useState("");
-  const [dateTo, setDateTo]             = useState("");
+
+
+  const today = new Date();
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(today.getDate() - 7);
+
+  const [dateFrom, setDateFrom] = useState(formatDatetoString(oneWeekAgo));
+  const [dateTo, setDateTo] = useState(formatDatetoString(today));
+  const [draftFrom, setDraftFrom] = useState(dateFrom);
+  const [draftTo, setDraftTo] = useState(dateTo);
  
   // Sorting
-  const [sortKey, setSortKey] = useState<SortKey>("statement_from_date");
+  const [sortKey, setSortKey] = useState<SortKey>("payment_date");
   const [sortDir, setSortDir] = useState<SortDir>(-1);
  
   // Pagination
@@ -55,14 +64,29 @@ export default function Claims() {
   const [selectedClaim, setSelectedClaim] = useState<ClaimDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [isModalOpen, setIsModalOpen]     = useState(false);
- 
-  useEffect(() => {
+
+
+  const fetchClaims = useCallback(async () => {
     setLoading(true);
-    api.get("/claims")
-      .then((res) => setClaims(res.data))
-      .catch((err) => { console.error(err); setError("Failed to load claims."); })
-      .finally(() => setLoading(false));
-  }, []);
+    try {
+      const res = await api.get("/claims", {
+        params: {
+          date_from: dateFrom || undefined,
+          date_to: dateTo || undefined,
+        }
+      });
+      setClaims(res.data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load claims.");
+    } finally {
+      setLoading(false);
+    }
+  }, [dateFrom, dateTo]);
+
+  useEffect(() => {
+    fetchClaims();
+  }, [fetchClaims]);
  
   const payers = useMemo(
     () => [...new Set(claims.map((c) => c.payer).filter(Boolean))].sort(),
@@ -74,11 +98,9 @@ export default function Claims() {
       if (search && !`${c.claim_number} ${c.patient_name} ${c.payer}`.toLowerCase().includes(search.toLowerCase())) return false;
       if (filterStatus && (c.status ?? "").toLowerCase() !== filterStatus) return false;
       if (filterPayer && c.payer !== filterPayer) return false;
-      if (dateFrom && (c.statement_from_date ?? "") < dateFrom) return false;
-      if (dateTo && (c.statement_to_date ?? "") > dateTo) return false;
       return true;
     });
-  }, [claims, search, filterStatus, filterPayer, dateFrom, dateTo]);
+  }, [claims, search, filterStatus, filterPayer]);
  
   const sortedClaims = useMemo(() => {
     return [...filteredClaims].sort((a, b) => {
@@ -116,7 +138,7 @@ export default function Claims() {
  
   function clearFilters() {
     setSearch(""); setFilterStatus(""); setFilterPayer("");
-    setDateFrom(""); setDateTo(""); setCurrentPage(1);
+    setDateFrom(""); setDateTo(""); setDraftFrom(""); setDraftTo(""); setCurrentPage(1);
   }
  
   async function handleRowClick(c: Claim) {
@@ -207,10 +229,28 @@ export default function Claims() {
               </select>
             </div>
             <div className="col-6 col-md-2">
-              <input type="date" className="form-control form-control-sm" value={dateFrom} onChange={(e) => { setDateFrom(e.target.value); setCurrentPage(1); }} />
+              <input 
+                type="date"
+                className="form-control form-control-sm" 
+                value={draftFrom} 
+                onChange={(e) => {setDraftFrom(e.currentTarget.value);}} 
+                onBlur={() => {
+                  setDateFrom(draftFrom);
+                  setCurrentPage(1);
+                }}
+              />
             </div>
             <div className="col-6 col-md-2">
-              <input type="date" className="form-control form-control-sm" value={dateTo} onChange={(e) => { setDateTo(e.target.value); setCurrentPage(1); }} />
+              <input
+                type="date"
+                className="form-control form-control-sm"
+                value={draftTo}
+                onChange={(e) => {setDraftTo(e.target.value);}}
+                onBlur={() => {
+                  setDateTo(draftTo);
+                  setCurrentPage(1);
+                }}
+              />
             </div>
           </div>
  
@@ -304,6 +344,7 @@ export default function Claims() {
           claim={selectedClaim}
           loading={loadingDetail}
           onClose={() => { setIsModalOpen(false); setSelectedClaim(null); }}
+          onRefresh={fetchClaims}
         />
       )}
     </div>

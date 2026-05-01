@@ -2,14 +2,15 @@ from app.repositories.claims_repository import ClaimsRepository
 from app.schema.denial_line_schema import DenialLineSchema
 from app.constants.carc_codes import CARC_CODE_DESCRIPTIONS
 from app.utils.claims_utils import calc_days_in_ar
+from datetime import date
 
 class ClaimsService:
     def __init__(self, db):
         self.repo = ClaimsRepository(db)
 
 
-    async def list_claims(self):
-        claims = await self.repo.get_all_claims()
+    async def list_claims(self, date_from: date | None = None, date_to: date | None = None):
+        claims = await self.repo.get_all_claims(date_from, date_to)
 
         return [
             {
@@ -95,3 +96,8 @@ class ClaimsService:
             )
             for row in rows
         ]
+
+
+    async def delete_claim(self, claim_id: int):
+        deleted_claim = await self.repo.delete_claim(claim_id)
+        return deleted_claim

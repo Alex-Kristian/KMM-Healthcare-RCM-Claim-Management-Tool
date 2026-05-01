@@ -7,6 +7,7 @@ export const fmt$ = (n: number) =>
  
 export const fmtPct = (n: number) => `${n.toFixed(1)}%`;
 
+export const fmtDecimal = (n: number) => `${n.toFixed(1)}`
 
 export const fmtFull = (n?: number) =>
   "$" + (n ?? 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -16,3 +17,5 @@ export const fmtDate = (d?: string) => {
   const [y, m, dd] = d.split("-");
   return `${m}/${dd}/${y}`;
 };
+
+export const formatDatetoString = (d: Date) => d.toISOString().split("T")[0];

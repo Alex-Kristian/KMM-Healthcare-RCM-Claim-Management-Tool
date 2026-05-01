@@ -8,10 +8,19 @@ class ClaimsRepository:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def get_all_claims(self):
+    async def get_all_claims(self, date_from, date_to):
+        
+        filters = [Claim.is_current == True]
+
+        if date_from:
+            filters.append(Claim.statement_from_date >= date_from)
+
+        if date_to:
+            filters.append(Claim.statement_from_date <= date_to)
+        
         result = await self.db.execute(
             select(Claim)
-            .where(Claim.is_current == True)
+            .where(*filters)
             .options(
                 selectinload(Claim.payer),
                 selectinload(Claim.era_file)    
@@ -60,3 +69,24 @@ class ClaimsRepository:
 
         result = await self.db.execute(query)
         return result.all()
+    
+
+    async def delete_claim(self, claim_id: int):
+        """Deletes a claim given the claim's id"""
+        result = await self.db.execute(
+            select(Claim)
+            .where(Claim.id == claim_id)
+            .options(
+                selectinload(Claim.service_lines)
+                .selectinload(ServiceLine.adjustments)
+            )
+        )
+        claim = result.scalar_one_or_none()
+
+        if not claim:
+            return None
+
+        await self.db.delete(claim)
+        await self.db.commit()
+
+        return claim
