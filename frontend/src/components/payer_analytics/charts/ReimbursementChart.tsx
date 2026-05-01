@@ -10,7 +10,28 @@ import {
   ReferenceLine,
 } from "recharts";
 import type { PayerStat } from "../../../types/PayerStat";
+import { fmtPct } from "../../../utils/formatters";
 
+const CustomTooltip = ({ active, payload }: any) => {
+  if (!active || !payload?.length) return null;
+
+  const node = payload[0].payload;
+
+  return (
+    <div
+      style={{
+        background: "#fff",
+        padding: "10px 12px",
+        borderRadius: 8,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        fontSize: 13,
+      }}
+    >
+      <strong>{node.name}</strong>
+      <div>Reimbursement %: {fmtPct(node.value)}</div>
+    </div>
+  );
+};
 
 const REIMB_BENCHMARK = 80;
 
@@ -21,7 +42,7 @@ export default function ReimbursementChart({ payerStats }: { payerStats: PayerSt
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
         <XAxis dataKey="payer" tick={{ fill: "#6c757d", fontSize: 8 }} angle={-30} textAnchor="end" />
         <YAxis tick={{ fill: "#6c757d", fontSize: 11 }} tickFormatter={(v) => `${v}%`} />
-        <Tooltip/>
+        <Tooltip content = {CustomTooltip}/>
         <ReferenceLine y={REIMB_BENCHMARK} stroke="#198754" strokeDasharray="5 5" label={{fill: "#198754"}} />
         <Bar dataKey="reimbursement" name="Reimbursement %" radius={[4, 4, 0, 0]}>
         {payerStats.map((p, i) => <Cell key={i} fill={p.reimbursement >= REIMB_BENCHMARK ? "#198754" : "#6f42c1"} />)}

@@ -21,7 +21,7 @@ export default function OverviewTab({ payerStats, selectedPayer, setSelectedPaye
           <div className="row g-3 mb-4">
             {/* Revenue by Payer */}
             <div className="col-12">
-              <div className="card border-0 shadow-sm h-100 bg-white" style={{ borderRadius: 10 }}>
+              <div className="card border-0 shadow-sm h-100 bg-white" style={{ borderRadius: 10}}>
                 <div className="card-body">
                   <h6 className="fw-bold text-dark mb-0">
                     <i className="text-primary" />Revenue by Payer

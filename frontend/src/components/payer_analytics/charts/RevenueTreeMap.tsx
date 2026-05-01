@@ -100,7 +100,7 @@ export default function RevenueTreemap({ payerStats }: { payerStats: PayerStat[]
 
   return (
     <div style={{ width: "100%" }}>
-      <ResponsiveContainer width="100%" height={360}>
+      <ResponsiveContainer width="100%" height={540}>
         <Treemap
           data={data}
           dataKey="value"
