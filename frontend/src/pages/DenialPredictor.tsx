@@ -16,7 +16,7 @@ export default function DenialPredictor() {
  
     useEffect(() => {
         setLoading(true);
-        api.get("/pre_submission_claims/")
+        api.get("/pre_submission_claims")
         .then((res) => setPreSubmissionClaims(res.data))
         .catch((err) => { console.error(err); setError("Failed to load claim prediction data."); })
         .finally(() => setLoading(false));
