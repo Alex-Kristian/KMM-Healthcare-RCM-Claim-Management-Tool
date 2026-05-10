@@ -13,10 +13,10 @@ class ClaimsRepository:
         filters = [Claim.is_current == True]
 
         if date_from:
-            filters.append(Claim.statement_from_date >= date_from)
+            filters.append(Claim.created_at >= date_from)
 
         if date_to:
-            filters.append(Claim.statement_from_date <= date_to)
+            filters.append(Claim.created_at <= date_to)
         
         result = await self.db.execute(
             select(Claim)

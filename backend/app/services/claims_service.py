@@ -25,7 +25,8 @@ class ClaimsService:
                 "is_first_pass": c.is_first_pass,
                 "statement_from_date": c.statement_from_date,
                 "statement_to_date": c.statement_to_date,
-                "payment_date": c.era_file.payment_date if c.is_denied and c.era_file  else c.final_payment_date, 
+                "payment_date": c.era_file.payment_date if c.is_denied and c.era_file  else c.final_payment_date,
+                "process_date": c.era_file.created_at if c.era_file else None, 
                 "days_in_ar": calc_days_in_ar(
                     c.statement_from_date, 
                     c.final_payment_date
@@ -53,6 +54,7 @@ class ClaimsService:
             "statement_from_date": claim.statement_from_date,
             "statement_to_date": claim.statement_to_date,
             "payment_date": claim.era_file.payment_date if claim.is_denied and claim.era_file  else claim.final_payment_date, 
+            "process_date": claim.created_at, 
             "days_in_ar": calc_days_in_ar(
                     claim.statement_from_date, 
                     claim.final_payment_date 
