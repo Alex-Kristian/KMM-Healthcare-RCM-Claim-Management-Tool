@@ -2,7 +2,6 @@ export default function TabsNav({ activeTab, setActiveTab }: any) {
   const tabs = [
     { key: "overview", label: "Overview" },
     { key: "drilldown", label: "Drilldown" },
-    { key: "insights", label: "Insights" },
   ];
 
   return (

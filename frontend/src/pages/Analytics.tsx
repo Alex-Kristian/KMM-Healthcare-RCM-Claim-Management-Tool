@@ -13,7 +13,6 @@ import InsightsAlert from "../components/payer_analytics/InsightsAlert";
 import TabsNav from "../components/payer_analytics/TabsNav";
 import OverviewTab from "../components/payer_analytics/OverviewTab";
 import DrilldownTab from "../components/payer_analytics/DrilldownTab";
-import InsightsTab from "../components/payer_analytics/InsightsTab";
  
  
 export default function PayerAnalytics() {
@@ -143,12 +142,6 @@ export default function PayerAnalytics() {
         </>
       )}
  
-      {/* INSIGHTS TAB */}
-      {activeTab === "insights" && (
-        <>
-            <InsightsTab payerStats={payerStats} kpis={kpis}></InsightsTab>
-        </>
-      )}
     </div>
   );
 }

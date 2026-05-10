@@ -28,6 +28,7 @@ export interface Claim {
   days_in_ar: number;
   is_first_pass: boolean;
   payment_date: string;
+  process_date: string;
 }
 
 export interface ClaimDetail extends Claim {
