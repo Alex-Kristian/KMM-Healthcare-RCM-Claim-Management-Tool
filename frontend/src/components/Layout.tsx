@@ -11,7 +11,8 @@ interface LayoutProps {
 const NAV_ITEMS = [
   { to: '/claims',    icon: 'bi-file-medical', label: 'Healthcare Claims'  },
   { to: '/analytics', icon: 'bi-bar-chart-line', label: 'Payer Performance' },
-  { to: '/denial_summary', icon: 'bi-x-circle', label: 'Denial Summary'}
+  { to: '/denial_summary', icon: 'bi-x-circle', label: 'Denial Summary'},
+  { to: '/denial_predictor', icon: 'bi-shield-exclamation', label: 'Claim Denial Predictor'}
 ];
  
 export default function Layout({ children }: LayoutProps) {

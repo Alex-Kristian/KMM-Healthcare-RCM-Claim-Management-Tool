@@ -22,8 +22,16 @@ export default function UploadModal({ show, onClose, onSuccess }: UploadModalPro
   const handleUpload = async () => {
     if (!file) return;
 
-    if (!file.name.endsWith(".835")) {
-      setErrorDetail("File must be an .835 ERA file.");
+    let endpoint = ""
+
+    if (file.name.endsWith(".835")){
+      endpoint = "/era/upload";
+    }
+    else if (file.name.endsWith(".837")){
+      endpoint = "/pre_submission_claims/upload"
+    }
+    else {
+      setErrorDetail("File must be an .835 or .837 file.");
       setStatus("error");
       return;
     }
@@ -33,7 +41,7 @@ export default function UploadModal({ show, onClose, onSuccess }: UploadModalPro
 
     try {
       setStatus("uploading");
-      const response = await api.post("/era/upload", formData);
+      const response = await api.post(endpoint, formData);
       console.log("Upload result:", response.data);
       setStatus("success");
       onSuccess?.();
@@ -68,7 +76,7 @@ export default function UploadModal({ show, onClose, onSuccess }: UploadModalPro
 
           {/* Header */}
           <div className="modal-header">
-            <h5 className="modal-title">Upload ERA .835 File</h5>
+            <h5 className="modal-title">Upload ERA .835 or EDI .837 File</h5>
             <button className="btn-close me-2" onClick={handleClose} />
           </div>
 

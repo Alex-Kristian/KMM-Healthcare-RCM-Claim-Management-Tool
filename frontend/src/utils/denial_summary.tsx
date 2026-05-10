@@ -2,9 +2,9 @@ import { useState, useMemo } from "react";
 import type { SortDir } from "../types/denial_summary";
 
 
-export function useSortable<T>(data: T[]) {
-  const [sortKey, setSortKey] = useState<keyof T | null>(null);
-  const [sortDir, setSortDir] = useState<SortDir>(-1);
+export function useSortable<T>(data: T[], initialKey: keyof T | null = null, initialDir: SortDir = -1) {
+  const [sortKey, setSortKey] = useState<keyof T | null>(initialKey);
+  const [sortDir, setSortDir] = useState<SortDir>(initialDir);
  
   function handleSort(key: keyof T) {
     if (sortKey === key) setSortDir((d) => (d === 1 ? -1 : 1));

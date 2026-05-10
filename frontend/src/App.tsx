@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import Claims from './pages/Claims';
 import Analytics from './pages/Analytics';
 import DenialSummary from './pages/DenialSummary'
+import DenialPredictor from './pages/DenialPredictor';
 
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="/claims" element={<Claims />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/denial_summary" element={<DenialSummary />} />
+            <Route path ="/denial_predictor" element={<DenialPredictor/>}/>
             <Route path="/*" element={<Navigate to="/claims" replace />} />
           </Routes>
         </Layout>

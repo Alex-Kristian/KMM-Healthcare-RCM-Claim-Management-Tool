@@ -24,7 +24,7 @@ const COLS: { key: SortKey; label: string; align?: string }[] = [
   { key: "patient_name",        label: "Patient"                    },
   { key: "payer",               label: "Payer"                      },
   { key: "statement_from_date", label: "Service Date"               },
-  { key: "payment_date",        label: "Payment Date"               },
+  { key: "process_date",        label: "Processed Date"               },
   { key: "total_charge",        label: "Billed",  align: "text-end" },
   { key: "paid_amount",         label: "Paid",    align: "text-end" },
   { key: "status",              label: "Status"                     },
@@ -53,7 +53,7 @@ export default function Claims() {
   const [draftTo, setDraftTo] = useState(dateTo);
  
   // Sorting
-  const [sortKey, setSortKey] = useState<SortKey>("payment_date");
+  const [sortKey, setSortKey] = useState<SortKey>("process_date");
   const [sortDir, setSortDir] = useState<SortDir>(-1);
  
   // Pagination
@@ -287,7 +287,7 @@ export default function Claims() {
                           <td className="fw-semibold text-dark" style={{ fontSize: 13 }}>{c.patient_name || "—"}</td>
                           <td className="text-muted" style={{ fontSize: 13 }}>{c.payer || "—"}</td>
                           <td className="text-muted" style={{ fontSize: 13 }}>{fmtDate(c.statement_from_date)}</td>
-                          <td className="text-muted" style={{ fontSize: 13 }}>{fmtDate(c.payment_date) || "—"}</td>
+                          <td className="text-muted" style={{ fontSize: 13 }}>{fmtDate(c.process_date) || "—"}</td>
                           <td className="text-end" style={{ fontSize: 13 }}>{fmtFull(c.total_charge)}</td>
                           <td className="text-end fw-semibold text-success" style={{ fontSize: 13 }}>{fmtFull(c.paid_amount)}</td>
                           <td><StatusBadge status={c.status} /></td>

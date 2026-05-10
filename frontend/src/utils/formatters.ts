@@ -19,3 +19,17 @@ export const fmtDate = (d?: string) => {
 };
 
 export const formatDatetoString = (d: Date) => d.toISOString().split("T")[0];
+
+export function formatDenialCategory(category?: string) {
+  if (!category) return "-";
+
+  const labels: Record<string, string> = {
+    auth_missing: "Missing Authorization",
+    eligibility: "Not Eligible",
+    medical_necessity: "Medical Necessity",
+    coding_error: "Coding Error",
+    duplicate: "Duplicate Claim"
+  };
+
+  return labels[category] ?? category
+}
