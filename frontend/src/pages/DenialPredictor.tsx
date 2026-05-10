@@ -47,7 +47,7 @@ export default function DenialPredictor() {
         <div className="d-flex align-items-center justify-content-center min-vh-100 bg-white">
             <div className="text-center">
             <div className="spinner-border text-primary" role="status" style={{ width: 40, height: 40 }} />
-            <p className="text-muted mt-3 mb-0" style={{ fontSize: 14 }}>Loading claim denial predcition data…</p>
+            <p className="text-muted mt-3 mb-0" style={{ fontSize: 14 }}>Loading claim denial prediction data…</p>
             </div>
         </div>
         );
