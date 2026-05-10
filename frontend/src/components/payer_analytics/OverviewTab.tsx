@@ -91,7 +91,7 @@ export default function OverviewTab({ payerStats, selectedPayer, setSelectedPaye
                           <td style={{ fontSize: 13 }}>{fmt$(p.revenue)}</td>
                           <td><span className={`fw-semibold ${p.denialRate > DENIAL_BENCHMARK ? "text-danger" : "text-success"}`} style={{ fontSize: 13 }}>{fmtPct(p.denialRate)}</span></td>
                           <td style={{ fontSize: 13 }}>{fmtPct(p.firstPassRate)}</td>
-                          <td><span className={p.avgAR > AR_BENCHMARK ? "text-warning fw-semibold" : "text-muted"} style={{ fontSize: 13 }}>{p.avgAR.toFixed(1)}d</span></td>
+                          <td><span className={p.avgAR > AR_BENCHMARK ? "text-warning fw-semibold" : "text-muted"} style={{ fontSize: 13 }}>{p.avgAR.toFixed(1) ?? 0.0}d</span></td>
                           <td><span className={`fw-semibold ${p.reimbursement < REIMB_BENCHMARK ? "text-warning" : "text-success"}`} style={{ fontSize: 13 }}>{fmtPct(p.reimbursement)}</span></td>
                         </tr>
                       );
