@@ -300,7 +300,7 @@ export default function Claims() {
  
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                <div className="d-flex justify-content-between align-items-center mt-3 pt-2">
                   <small className="text-muted" style={{ fontSize: 12 }}>
                     Showing {Math.min((currentPage - 1) * pageSize + 1, sortedClaims.length)}–
                     {Math.min(currentPage * pageSize, sortedClaims.length)} of {sortedClaims.length}
