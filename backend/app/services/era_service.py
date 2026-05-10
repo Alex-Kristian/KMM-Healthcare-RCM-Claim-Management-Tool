@@ -1,4 +1,4 @@
-from app.parsers.era_parser import parse_era
+from app.parsers.era_835_parser.era_parser import parse_era
 from app.repositories.era_repository import EraRepository
 from app.models.era import Claim
 from app.utils.claims_utils import assign_missing_claim_total_values
@@ -32,9 +32,6 @@ class EraService:
         new_claims: list[Claim] = []
         
         # If era file has already been processed skip creation
-        duplicate_era_file = await self.repo.get_era(era_data.get("trace_number"))
-        if duplicate_era_file:
-            return None
 
         era_file = await self.repo.create_era(era_data=era_data)
 
