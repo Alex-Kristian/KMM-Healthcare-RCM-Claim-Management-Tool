@@ -5,10 +5,12 @@ export const fmt$ = (n: number) =>
     ? `$${(n / 1_000).toFixed(1)}K`
     : `$${n.toFixed(0)}`;
  
-export const fmtPct = (n: number) => `${n.toFixed(1)}%`;
-
-export const fmtDecimal = (n: number) => `${n.toFixed(1)}`
-
+export const fmtPct = (n: number) => {
+  return`${Number(n ?? 0).toFixed(1)}%`;
+}
+export const fmtDecimal = (n?: number) => {
+  return `${Number(n ?? 0).toFixed(1)}`
+}
 export const fmtFull = (n?: number) =>
   "$" + (n ?? 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
  

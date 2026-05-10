@@ -15,7 +15,7 @@ import { fmtPct } from "../../../utils/formatters";
 const CustomTooltip = ({ active, payload }: any) => {
   if (!active || !payload?.length) return null;
 
-  const node = payload[0].payload;
+  const node = payload[0];
 
   return (
     <div
@@ -27,7 +27,7 @@ const CustomTooltip = ({ active, payload }: any) => {
         fontSize: 13,
       }}
     >
-      <strong>{node.name}</strong>
+      <strong>{node.payload.payer}</strong>
       <div>Reimbursement %: {fmtPct(node.value)}</div>
     </div>
   );
@@ -42,7 +42,7 @@ export default function ReimbursementChart({ payerStats }: { payerStats: PayerSt
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
         <XAxis dataKey="payer" tick={{ fill: "#6c757d", fontSize: 8 }} angle={-30} textAnchor="end" />
         <YAxis tick={{ fill: "#6c757d", fontSize: 11 }} tickFormatter={(v) => `${v}%`} />
-        <Tooltip content = {CustomTooltip}/>
+        <Tooltip content = {<CustomTooltip/>}/>
         <ReferenceLine y={REIMB_BENCHMARK} stroke="#198754" strokeDasharray="5 5" label={{fill: "#198754"}} />
         <Bar dataKey="reimbursement" name="Reimbursement %" radius={[4, 4, 0, 0]}>
         {payerStats.map((p, i) => <Cell key={i} fill={p.reimbursement >= REIMB_BENCHMARK ? "#198754" : "#6f42c1"} />)}
