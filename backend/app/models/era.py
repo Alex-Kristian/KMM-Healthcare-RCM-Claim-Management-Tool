@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, Date, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, Date, Boolean
+from datetime import date
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import relationship
 from sqlalchemy import func
@@ -20,7 +21,7 @@ class EraFile(Base):
 
     trace_number = Column(String(100))
 
-    created_at = Column(DateTime, server_default=func.now())
+    created_at = Column(Date, default=date.today)
 
     claims = relationship(
         "Claim",
@@ -41,7 +42,8 @@ class Claim(Base):
 
     id = Column(Integer, primary_key=True)
     previous_claim_id = Column(Integer)
-
+    created_at = Column(Date, default=date.today)
+    
     #Payer/Payee Information
     payer_id = Column(Integer, ForeignKey("payers.id"))
     patient_control_number = Column(String(50), nullable=False)
