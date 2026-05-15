@@ -18,9 +18,10 @@ class PreSubmissionClaimService:
             
             self._predict_claim_denials(pre_submission_claims)
 
-            return await self.create_pre_submission_claims(pre_submission_claims)
-
-
+            new_claims =  await self.create_pre_submission_claims(pre_submission_claims)
+            if not new_claims:
+                raise Exception("Unable to upload EDI file")
+            return new_claims
         except Exception:
             await self.repo.db.rollback()
             raise

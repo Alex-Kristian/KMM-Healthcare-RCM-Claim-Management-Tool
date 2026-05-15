@@ -22,7 +22,7 @@ class EraService:
 
             new_claims = await self._create_claims_from_era(era_data)
             if not new_claims:
-                raise Exception("ERA file has already been uploaded")
+                raise Exception("Unable to upload ERA file")
 
             await self.repo.db.commit() 
 
