@@ -1,3 +1,5 @@
+# Model trained on dataset from https://www.kaggle.com/datasets/nudratabbas/denialiq-120k-medical-claims-x12-denial-codes
+
 from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score, classification_report

@@ -18,7 +18,7 @@ class PreSubmissionClaimService:
             
             self._predict_claim_denials(pre_submission_claims)
 
-            return await self._create_pre_submission_claims(pre_submission_claims)
+            return await self.create_pre_submission_claims(pre_submission_claims)
 
 
         except Exception:
@@ -36,56 +36,68 @@ class PreSubmissionClaimService:
     
 
     def _predict_claim_denials(self, claims: list[PreSubmissionClaim]):
-        with open("app/prediction_models/claim_denial_model/claim_denial_model.pkl", "rb") as f:
-            model = pickle.load(f)
+        """
+        Predicts if PreSubmissionClaims are likely to be denied and what knid of denial is most likely
+        Param: claims: list[PreSubmissionClaim], List of PreSubmissionClaims to have claim denial predicted
+        Return: list[PreSubmissionClaims], List of predicted PreSubmissionClaims
+        """
+        try:
+            with open("app/prediction_models/claim_denial_model/claim_denial_model.pkl", "rb") as f:
+                model = pickle.load(f)
 
 
-        with open("app/prediction_models/claim_denial_code_model/claim_denial_code_model.pkl", "rb") as f:
-            denial_code_model = pickle.load(f)
+            with open("app/prediction_models/claim_denial_code_model/claim_denial_code_model.pkl", "rb") as f:
+                denial_code_model = pickle.load(f)
 
 
-        with open("app/prediction_models/claim_denial_code_model/claim_denial_code_encoder.pkl", "rb") as f:
-            denial_code_label_encoder = pickle.load(f)
+            with open("app/prediction_models/claim_denial_code_model/claim_denial_code_encoder.pkl", "rb") as f:
+                denial_code_label_encoder = pickle.load(f)
 
-        categorical_cols = [
-            "payer_type",
-            "provider_specialty",
-            "cpt_code",
-            "modifier",
-            "primary_icd10_dx",
-            "prior_auth_required",
-            "prior_auth_obtained"
-        ]
+            categorical_cols = [
+                "payer_type",
+                "provider_specialty",
+                "cpt_code",
+                "modifier",
+                "primary_icd10_dx",
+                "prior_auth_required",
+                "prior_auth_obtained"
+            ]
 
-        for claim in claims:
-            input_df = pd.DataFrame([{
-                "payer_type": claim.payer_type,
-                "provider_specialty": claim.provider_specialty,
-                "claim_amount_usd": float(claim.claim_amount_usd),
-                "cpt_code": claim.pre_submission_services[0].cpt_code if claim.pre_submission_services else None,
-                "modifier": claim.pre_submission_services[0].modifier if claim.pre_submission_services else None,
-                "primary_icd10_dx": claim.primary_icd10_dx,
-                "secondary_dx_count": claim.secondary_dx_count,
-               # "documentation_completeness": float(claim.documentation_completeness),
-                "prior_auth_required": claim.prior_auth_required,
-                "prior_auth_obtained": claim.prior_auth_obtained
-            }])
+            for claim in claims:
+                input_df = pd.DataFrame([{
+                    "payer_type": claim.payer_type,
+                    "provider_specialty": claim.provider_specialty,
+                    "claim_amount_usd": float(claim.claim_amount_usd),
+                    "cpt_code": claim.pre_submission_services[0].cpt_code if claim.pre_submission_services else None,
+                    "modifier": claim.pre_submission_services[0].modifier if claim.pre_submission_services else None,
+                    "primary_icd10_dx": claim.primary_icd10_dx,
+                    "secondary_dx_count": claim.secondary_dx_count,
+                # "documentation_completeness": float(claim.documentation_completeness),
+                    "prior_auth_required": claim.prior_auth_required,
+                    "prior_auth_obtained": claim.prior_auth_obtained
+                }])
 
-            for col in categorical_cols:
-                input_df[col] = input_df[col].astype("category")
+                for col in categorical_cols:
+                    input_df[col] = input_df[col].astype("category")
 
-            claim.denial_prediction = model.predict(input_df)[0]
-            claim.denial_probability = float(model.predict_proba(input_df)[0][1])
+                claim.denial_prediction = model.predict(input_df)[0]
+                claim.denial_probability = float(model.predict_proba(input_df)[0][1])
 
-            if claim.denial_probability >= 0.40:
-                category_prediction = denial_code_model.predict(input_df)[0]
-                claim.denial_category = denial_code_label_encoder.inverse_transform([category_prediction])[0]
-
+                if claim.denial_probability >= 0.40:
+                    category_prediction = denial_code_model.predict(input_df)[0]
+                    claim.denial_category = denial_code_label_encoder.inverse_transform([category_prediction])[0]
+        except Exception as e:
+            raise Exception(f"Failed to predict claim denials")
         return claims
 
 
 
-    async def _create_pre_submission_claims(self, claims: PreSubmissionClaim):
+    async def create_pre_submission_claims(self, claims: list[PreSubmissionClaim]):
+        """
+        Saves a list of PreSubmissionClaim instances to the database
+        Param: claims: list[PreSubmisionClaim], List of claims to be added to the database
+        Return: list[PreSubmissionClaims], List of PreSubmissionClaims created
+        """
         for claim in claims:
             await self.repo.create_pre_submission_claim(claim)
 
@@ -93,6 +105,11 @@ class PreSubmissionClaimService:
         return claims
     
     async def delete_pre_submission_claim(self, pre_submission_claim_id: int) -> bool:
+        """
+        Deletes a PreSubmissionClaim given its ID
+        Param: pre_submission_claim_id: int, PreSubmissonClaim ID
+        Return: Boolean, True if deleted, false if unable to delete
+        """
         deleted = await self.repo.delete_by_id(pre_submission_claim_id)
         await self.repo.db.commit()
         return deleted

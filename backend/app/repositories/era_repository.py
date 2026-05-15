@@ -19,6 +19,11 @@ class EraRepository:
         self.db = db
     
     async def create_era(self, era_data: dict):
+        """
+        Creates ERAFile from era data and saves to database
+        Param: era_data: dict, Dictionary containing parsed ERA data
+        Return: ERAFile, The created ERAFile
+        """
         era_file = EraFile(
             payee_name=era_data.get("payee_name"),
             payee_npi=era_data.get("payee_npi"),
@@ -34,6 +39,11 @@ class EraRepository:
         return era_file
     
     async def get_era(self, trace_number):
+        """
+        Retrieves an ERAFile by its trace number
+        Param: trace_number: str, trace number of the ERAFile to be retrieved
+        Return: ERAFile, ERAFile retrieved
+        """
         result = await self.db.execute(
             select(EraFile).where(EraFile.trace_number == trace_number)
         )
@@ -47,6 +57,11 @@ class EraRepository:
 
 
     async def create_payer(self, era_data: dict):
+        """
+        Creates and saves a Payer to the database
+        Param: era_data: dict, parsed ERA contents
+        Return: Payer, Payer created
+        """
         payer = Payer(
             payer_name=era_data.get("payer_name"),
             payer_identifier=era_data.get("payer_id"),
@@ -58,6 +73,13 @@ class EraRepository:
 
     
     async def create_new_claim(self, claim_data: dict, payer_id: int, era_file_id: int, payment_date_string: str):
+        """
+        Creates a new Claim and saves the Claim to the datbase
+        Param: claim_data: dict, parsed claim data
+        Param: payer_id: int, ID of the claim's payer
+        Param: era_file_id: int, ID of the claim's ERA
+        Param: payment_date_string: str, date of claim payment
+        """
         new_claim = Claim(
             payer_id=payer_id,
             era_file_id=era_file_id,
@@ -99,7 +121,9 @@ class EraRepository:
 
 
     async def get_duplicate_previous_claim(self, patient_control_number: str, payer_id: int):
-        
+        """
+        Retrieves a current Claim by its patient control number and payer_id
+        """
         #Should claim date of service be added as well?
         result = await self.db.execute(
             select(Claim)
@@ -163,6 +187,12 @@ class EraRepository:
 
     
     async def create_service_line(self, service_line_data: dict, claim_id: int) -> ServiceLine:
+        """
+        Creates a new ServiceLine object and saves it to th database
+        Param: service_line_data: dict, parsed service data
+        Param: claim_id: int, ID of the service's claim  
+        Return: ServiceLine, Created ServiceLine object 
+        """
         service_line = ServiceLine(
             claim_id=claim_id,
             procedure_code=service_line_data.get("cpt_code"),
@@ -181,6 +211,11 @@ class EraRepository:
 
 
     async def create_adjustment(self, adjustment_data: dict, service_line_id: int) -> Adjustment:
+        """
+        Creates and saves an Adjustment object
+        Param: adjustment_data: dict, parsed adjustment data
+        Param: service_ine_id: int, The adjutment's associated SericeLine ID
+        """
         adjustment = Adjustment(
             service_line_id=service_line_id,
             group_code=adjustment_data.get("group_code"),
@@ -194,6 +229,11 @@ class EraRepository:
 
     
     async def get_adjustments_by_service_line_id(self, service_line_id:int):
+        """
+        Retrieves list of adjustments in a service
+        Param: service_line_id: int, ID of service line
+        Return list[Adjustment], List of adjustments for a service
+        """
         result = await self.db.execute(
             select(Adjustment).where(Adjustment.service_line_id == service_line_id)
         )

@@ -2,17 +2,32 @@ from .era_parser_utils import safe_get, safe_float, finalize_claim
 
 
 def handle_bpr(elements, era):
+    """
+    Parses BPR section of an ERA file
+    Param: elements: list[str], list of BPR segment elements
+    Param: era: dict, current ERA being created
+    """
     era['payment_amount'] = safe_float(elements, 2)
     era['payment_method'] = safe_get(elements, 4)
     era['payment_date'] = safe_get(elements, 16)
 
 
 def handle_trn(elements, era):
+    """
+    Parses TRN section of an ERA file
+    Param: elements: list[str], list of TRN segment elements
+    Param: era: dict, current ERA being created
+    """
     era['trace_number'] = safe_get(elements, 2)
     era['originating_company_id'] = safe_get(elements, 3)
 
 
 def handle_n1(elements, era):
+    """
+    Parses N1 section of an ERA file
+    Param: elements: list[str], list of N1 segment elements
+    Param: era: dict, current ERA being created
+    """
     qualifier = safe_get(elements, 1)
 
     if qualifier == 'PR':
@@ -25,6 +40,12 @@ def handle_n1(elements, era):
 
 
 def handle_clp(elements, era, current_claim, current_service_line):
+    """
+    Parses SVC section of an ERA file and finalizes the current claim
+    Param: elements: list[str], list of SVC segment elements
+    Param: current_claim: dict, current claim being created
+    Param: current_service_line: dict, current service being created
+    """
     finalize_claim(era, current_claim, current_service_line)
 
     return {
@@ -45,6 +66,12 @@ def handle_clp(elements, era, current_claim, current_service_line):
 
 
 def handle_cas(elements, claim, service_line):
+    """
+    Parses CAS section of an ERA file
+    Param: elements: list[str], list of CAS segment elements
+    Param: claim: dict, current claim being created
+    Param: service_line: dict, current service being created
+    """
     group_code = safe_get(elements, 1)
 
     for i in [2, 5, 8]:
@@ -65,6 +92,11 @@ def handle_cas(elements, claim, service_line):
 
 
 def handle_nm1(elements, claim):
+    """
+    Parses NM1 section of an ERA file
+    Param: elements: list[str], list of NM1 segment elements
+    Param: claim: dict, current claim being created
+    """
     qualifier = safe_get(elements, 1)
 
     if qualifier == 'QC':
@@ -77,6 +109,12 @@ def handle_nm1(elements, claim):
 
 
 def handle_svc(elements, claim, current_service_line):
+    """
+    Parses SVC section of an ERA file
+    Param: elements: list[str], list of SVC segment elements
+    Param: claim: dict, current claim being created
+    Param: current_service_line: dict, current service being created
+    """
     if not claim:
         return None
     
@@ -101,6 +139,12 @@ def handle_svc(elements, claim, current_service_line):
 
 
 def handle_dtm(elements, claim, service_line):
+    """
+    Parses DTM section of an ERA file
+    Param: elements: list[str], list of DTM segment elements
+    Param: claim: dict, current claim being created
+    Param: service_line: dict, current service being created
+    """
     qualifier = safe_get(elements, 1)
     date_val = safe_get(elements, 2)
 
@@ -113,11 +157,22 @@ def handle_dtm(elements, claim, service_line):
 
 
 def handle_amt(elements, service_line):
+    """
+    Parses AMT section of an ERA file
+    Param: elements: list[str], list of AMT segment elements
+    Param: service_line: dict, current service being created
+    """
     if safe_get(elements, 1) == 'B6':
         service_line['allowed_amount'] = safe_float(elements, 2)
 
 
 def handle_plb(elements, era):
+    """
+    Parses PLB section of an ERA file
+    Param: elements: list[str], list of PLB segment elements
+    Param: era: dict, current era being created
+    Param: current_service_line: dict, current service being created
+    """
     npi = safe_get(elements, 1)
     fiscal_date = safe_get(elements, 2)
 

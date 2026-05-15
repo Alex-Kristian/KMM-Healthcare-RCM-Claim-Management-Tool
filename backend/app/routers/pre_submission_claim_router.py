@@ -18,6 +18,9 @@ async def process_pre_submission_claims(
     file: UploadFile = File(...),
     db: AsyncSession = Depends(get_db)
 ):
+    """
+    Parses and saves uploaded EDI data
+    """
     try:
         content_bytes = await file.read()
         raw_text = content_bytes.decode()
@@ -27,7 +30,7 @@ async def process_pre_submission_claims(
         result = await service.process_edi_837(raw_text=raw_text)
 
         return {
-            "message": "ERA processed successfully",
+            "message": "EDI processed successfully",
             "Pre Submission Claims Processed": len(result)
         }
 
@@ -46,6 +49,10 @@ async def process_pre_submission_claims(
 
 @router.get("", response_model=list[PreSubmissionClaimResponse])
 async def list_pre_submission_claims(date_from: date|None = None, date_to: date | None = None, db=Depends(get_db)):
+    """
+    Retrieves a list of pre submission claims from and to processed date
+    Return: list[PreSubmissionResponse]
+    """
     service = PreSubmissionClaimService(db)
     return await service.list_pre_submission_claims()
 
@@ -54,6 +61,9 @@ async def delete_pre_submission_claim(
     pre_submission_claim_id: int,
     db: AsyncSession = Depends(get_db)
 ):
+    """
+    Deletes a PreSubmissionClaim by its ID
+    """
     service = PreSubmissionClaimService(db)
 
     deleted = await service.delete_pre_submission_claim(pre_submission_claim_id)

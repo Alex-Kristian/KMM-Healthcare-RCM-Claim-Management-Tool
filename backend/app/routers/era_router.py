@@ -14,6 +14,7 @@ async def upload_era(
     file: UploadFile = File(...),
     db: AsyncSession = Depends(get_db)
 ):
+    """Parses and saves ERA file data"""
     try:
         content_bytes = await file.read()
         raw_text = content_bytes.decode()

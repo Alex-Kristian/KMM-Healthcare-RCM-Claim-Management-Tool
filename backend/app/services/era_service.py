@@ -9,6 +9,11 @@ class EraService:
 
 
     async def process_era(self, raw_text: str):
+        """
+        Parses and saves ERA file data
+        Param: raw_text: str, ERA file contents
+        Return: list[Claim], List of Clim created from ERA file upload
+        """
         try:
             era_data = parse_era(raw_text)
 
@@ -29,6 +34,11 @@ class EraService:
     
 
     async def _create_claims_from_era(self, era_data: dict):
+        """
+        process_era helper function. Creates new ERAFile, Claim, Payer, ServiceLine, and Adjustment objects.
+        Param: era_data: dict, Parsed ERA file data
+        Return: list[Claim], List of new created Claims
+        """
         new_claims: list[Claim] = []
         
         # If era file has already been processed skip creation

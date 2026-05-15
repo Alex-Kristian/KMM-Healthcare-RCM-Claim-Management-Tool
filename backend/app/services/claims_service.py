@@ -10,6 +10,11 @@ class ClaimsService:
 
 
     async def list_claims(self, date_from: date | None = None, date_to: date | None = None):
+        """
+        Lists all Claims processed from and to date
+        Param: date_from: date, Date processed from
+        Param: date_to: date, Date processed to
+        """
         claims = await self.repo.get_all_claims(date_from, date_to)
 
         return [
@@ -37,6 +42,9 @@ class ClaimsService:
 
 
     async def get_claim_details(self, claim_id: int):
+        """
+        get Claim extended details by Claim ID
+        """
         claim = await self.repo.get_claim_with_details(claim_id)
 
         if not claim:
@@ -80,6 +88,9 @@ class ClaimsService:
         }
     
     async def get_denial_lines(self):
+        """
+        Get a list of all current denial lines for Denial Summary
+        """
         rows = await self.repo.get_denial_line_rows()
 
         return [
@@ -101,5 +112,8 @@ class ClaimsService:
 
 
     async def delete_claim(self, claim_id: int):
+        """
+        Delete a Claim by Claim ID
+        """
         deleted_claim = await self.repo.delete_claim(claim_id)
         return deleted_claim

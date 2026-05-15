@@ -3,6 +3,12 @@ from app.models.era import Adjustment, ServiceLine, Claim
 
 
 def calc_days_in_ar(service_date, payment_date):
+    """
+    Calculates days in A/R
+    Param: service_date: date, Date of service
+    Param: payment_date: date, Date of Claim payment
+    Return: int, Days in A/R
+    """
     if not service_date:
         return None
     end_date = payment_date if payment_date else date.today()
@@ -10,6 +16,9 @@ def calc_days_in_ar(service_date, payment_date):
 
 
 def assign_missing_claim_total_values(claim:Claim, service_lines:list[ServiceLine], adjustments:list[Adjustment]):
+    """
+    Calculates patient responsibility, paid amount, and total charge of a Claim from ServiceLines and Adjustments if the values are not given
+    """
     if claim.patient_responsibility == 0:
         claim.patient_responsibility = calc_patient_responsibility(adjustments)
 
@@ -21,7 +30,9 @@ def assign_missing_claim_total_values(claim:Claim, service_lines:list[ServiceLin
 
 
 def calc_patient_responsibility(adjustments:list[Adjustment]):
-    
+    """
+    Caluculates Claim patient responsibility if not given
+    """
     if not adjustments:
         return 0
     patient_responsibility = 0
@@ -32,6 +43,9 @@ def calc_patient_responsibility(adjustments:list[Adjustment]):
     return patient_responsibility
 
 def calc_paid_amount(service_lines:list[ServiceLine]):
+    """
+    Caluculates Claim paid amount if not given
+    """
     if not service_lines:
         return 0
     total_paid = 0
@@ -42,6 +56,9 @@ def calc_paid_amount(service_lines:list[ServiceLine]):
 
 
 def calc_total_charge(service_lines:list[ServiceLine]):
+    """
+    Caluculates Claim total charge if not given
+    """
     if not service_lines:
         return 0
     total_charge = 0

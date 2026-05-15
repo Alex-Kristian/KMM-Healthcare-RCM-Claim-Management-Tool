@@ -1,3 +1,4 @@
+# List of CARC codes and their descriptions
 CARC_CODE_DESCRIPTIONS = {
     '2': 'Patient Responsibility',
     '4': 'Modifier inconsistency',
@@ -24,6 +25,7 @@ CARC_CODE_DESCRIPTIONS = {
     'MA04': 'Secondary payer info required',
 }
 
+# Actions to perform for the given CARC code
 CARC_CODE_ACTIONS = {
     '4': 'Resubmit w/ corrected modifier',
     '16': 'Resubmit with required data',

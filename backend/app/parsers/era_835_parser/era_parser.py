@@ -3,6 +3,10 @@ from .era_segment_handlers import *
 from .era_parser_utils import init_era, finalize_claim
 
 def parse_era(content: str):
+    """
+    Parses an ERA file and returns a dict of the parsed ERA
+    Param: content: str, the content of the ERA
+    """
     current_era = init_era()
     current_claim = {}
     current_service_line = {}
